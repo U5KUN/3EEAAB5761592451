@@ -14,7 +14,7 @@ app.post('/UpdateLastLoginedInfo', (req, res) => {
           "BannedUntil": null,
           "ContactEmailAddresses": null,
           "Created": null,
-          "DisplayName": null,
+          "DisplayName": "うんちいいいぶりぶりwwww",
           "ExperimentVariants": null,
           "LastLogin": "2026-04-05T09:44:24.171Z",
           "LinkedAccounts": null,
