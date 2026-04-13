@@ -47,6 +47,12 @@ app.post('/ReceiveDistributedItems', (req, res) => {
     });
 });
 
+app.post('/GetMissionGroupStats', (req, res) => {
+    console.log("PlayFabからのデータ:", req.body);
+
+    res.status(200).json({});
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
