@@ -21,7 +21,7 @@ app.post('/UpdateLastLoginedInfo', (req, res) => {
           "Locations": null,
           "Memberships": null,
           "Origination": null,
-          "PlayerId": entityProfile.Lineage.MasterPlayerAccount,
+          "PlayerId": entityProfile.Lineage.MasterPlayerAccountId,
           "PublisherId": "3EEAAB5761592451",
           "PushNotificationRegistrations": null,
           "Statistics": null,
