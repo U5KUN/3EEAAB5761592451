@@ -1,17 +1,16 @@
 const express = require('express');
-const PlayFabSDK = require('playfab-sdk');
-const app = express();
+const { PlayFab, PlayFabServer, PlayFabAdmin } = require("playfab-sdk");const app = express();
 app.use(express.json());
 
-const PlayFabServer = PlayFabSDK.PlayFabServer;
-PlayFabServer.settings.titleId = process.env.PLAYFAB_TITLE_ID;
-PlayFabServer.settings.developerSecretKey = process.env.PLAYFAB_SECRET_KEY;
+PlayFab.settings.titleId = process.env.PLAYFAB_TITLE_ID;
+PlayFab.settings.developerSecretKey = process.env.PLAYFAB_SECRET_KEY;
 
 app.post('/UpdateLastLoginedInfo', (req, res) => {
     const entityProfile = req.body.CallerEntityProfile;
 
     console.log("PlayFabからのデータ:", req.body);
 
+    var LastLogin, DisplayName;
     PlayFabServer.GetPlayerProfile({
         PlayFabId: playFabId,
         ProfileConstraints: {
@@ -24,8 +23,8 @@ app.post('/UpdateLastLoginedInfo', (req, res) => {
             return res.status(500).json({ error: error.errorMessage });
         }
 
-        const LastLogin = result.data.PlayerProfile.LastLogin;
-        const DisplayName = result.data.PlayerProfile.DisplayName;
+        LastLogin = result.data.PlayerProfile.LastLogin;
+        DisplayName = result.data.PlayerProfile.DisplayName;
     });
 
 
@@ -87,7 +86,7 @@ app.post('/ChangePlayerName', (req, res) => {
     console.log(`ID: ${playFabId} の名前を ${newName} に変更します。 (CustomId: ${customId})`);
 
     // 3. PlayFabの名前更新APIを実行
-    PlayFabServer.UpdateUserTitleDisplayName({
+    PlayFabAdmin.UpdateUserTitleDisplayName({
         PlayFabId: playFabId,
         DisplayName: newName
     }, (error, result) => {
