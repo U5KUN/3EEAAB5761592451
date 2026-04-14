@@ -1,8 +1,9 @@
 const express = require('express');
-const { PlayFabServer } = require('playfab-sdk'); 
+const PlayFabSDK = require('playfab-sdk');
 const app = express();
 app.use(express.json());
 
+const PlayFabServer = PlayFabSDK.PlayFabServer;
 PlayFabServer.settings.titleId = process.env.PLAYFAB_TITLE_ID;
 PlayFabServer.settings.developerSecretKey = process.env.PLAYFAB_SECRET_KEY;
 
