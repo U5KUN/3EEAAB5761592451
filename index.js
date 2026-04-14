@@ -7,12 +7,13 @@ PlayFab.settings.developerSecretKey = process.env.PLAYFAB_SECRET_KEY;
 
 app.post('/UpdateLastLoginedInfo', (req, res) => {
     const entityProfile = req.body.CallerEntityProfile;
+    const PlayerId = entityProfile.Lineage.MasterPlayerAccountId
 
     console.log("PlayFabからのデータ:", req.body);
 
     var LastLogin, DisplayName;
     PlayFabServer.GetPlayerProfile({
-        PlayFabId: playFabId,
+        PlayFabId: PlayerId,
         ProfileConstraints: {
             ShowDisplayName: true,
             ShowLastLogin: true
@@ -35,14 +36,14 @@ app.post('/UpdateLastLoginedInfo', (req, res) => {
           "BannedUntil": null,
           "ContactEmailAddresses": null,
           "Created": null,
-          "DisplayName": DisplayName || entityProfile.Lineage.MasterPlayerAccountId,
+          "DisplayName": DisplayName || PlayerId,
           "ExperimentVariants": null,
           "LastLogin": LastLogin,
           "LinkedAccounts": null,
           "Locations": null,
           "Memberships": null,
           "Origination": null,
-          "PlayerId": entityProfile.Lineage.MasterPlayerAccountId,
+          "PlayerId": PlayerId,
           "PublisherId": "3EEAAB5761592451",
           "PushNotificationRegistrations": null,
           "Statistics": null,
