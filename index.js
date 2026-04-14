@@ -75,6 +75,8 @@ app.post('/GetMissionGroupStats', (req, res) => {
 });
 
 app.post('/ChangePlayerName', (req, res) => {
+    console.log("PlayFabからのデータ:", req.body);
+
     // 1. Unityから送られた引数（FunctionParameter）を取得
     const newName = req.body.FunctionParameter.DisplayName;
     const customId = req.body.FunctionParameter.CustomId; // 必要に応じてログ等で使用
