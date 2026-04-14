@@ -2,10 +2,30 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 
+PlayFabServer.settings.titleId = process.env.PLAYFAB_TITLE_ID;
+PlayFabServer.settings.developerSecretKey = process.env.PLAYFAB_SECRET_KEY;
+
 app.post('/UpdateLastLoginedInfo', (req, res) => {
     const entityProfile = req.body.CallerEntityProfile;
 
     console.log("PlayFabからのデータ:", req.body);
+
+    PlayFabServer.GetPlayerProfile({
+        PlayFabId: playFabId,
+        ProfileConstraints: {
+            ShowDisplayName: true,
+            ShowLastLogin: true
+        }
+    }, (error, result) => {
+        if (error) {
+            console.error("PlayFab Error:", error);
+            return res.status(500).json({ error: error.errorMessage });
+        }
+
+        const LastLogin = result.data.PlayerProfile.LastLogin;
+        const DisplayName = result.data.PlayerProfile.DisplayName;
+    });
+
 
     const resultPayload = {
         "PlayerProfile": {
@@ -14,9 +34,9 @@ app.post('/UpdateLastLoginedInfo', (req, res) => {
           "BannedUntil": null,
           "ContactEmailAddresses": null,
           "Created": null,
-          "DisplayName": "うんちいいいぶりぶりwwww",
+          "DisplayName": DisplayName || entityProfile.Lineage.MasterPlayerAccountId,
           "ExperimentVariants": null,
-          "LastLogin": "2026-04-05T09:44:24.171Z",
+          "LastLogin": LastLogin,
           "LinkedAccounts": null,
           "Locations": null,
           "Memberships": null,
@@ -51,6 +71,33 @@ app.post('/GetMissionGroupStats', (req, res) => {
     console.log("PlayFabからのデータ:", req.body);
 
     res.status(200).json({});
+});
+
+app.post('/ChangePlayerName', (req, res) => {
+    // 1. Unityから送られた引数（FunctionParameter）を取得
+    const newName = req.body.FunctionParameter.DisplayName;
+    const customId = req.body.FunctionParameter.CustomId; // 必要に応じてログ等で使用
+    
+    // 2. 操作対象の PlayFab ID を取得
+    const playFabId = req.body.CallerEntityProfile.Lineage.MasterPlayerAccountId;
+
+    console.log(`ID: ${playFabId} の名前を ${newName} に変更します。 (CustomId: ${customId})`);
+
+    // 3. PlayFabの名前更新APIを実行
+    PlayFabServer.UpdateUserTitleDisplayName({
+        PlayFabId: playFabId,
+        DisplayName: newName
+    }, (error, result) => {
+        if (error) {
+            console.error("更新エラー:", error);
+            return res.status(500).json({ error: error.errorMessage });
+        }
+
+        // 4. 更新後の名前とステータスをUnityに返す
+        res.json({
+            RawDisplayName: result.data.DisplayName,
+        });
+    });
 });
 
 const PORT = process.env.PORT || 3000;
