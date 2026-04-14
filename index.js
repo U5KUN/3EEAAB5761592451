@@ -96,7 +96,7 @@ app.post('/ChangePlayerName', (req, res) => {
 
         // 4. 更新後の名前とステータスをUnityに返す
         res.json({
-            RawDisplayName: result.data.DisplayName,
+            RawDisplayName: newName,
         });
     });
 });
